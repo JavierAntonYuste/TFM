@@ -1,38 +1,12 @@
 # Libraries
-import nltk
-nltk.download('punkt')
-import tweepy
-from textblob import TextBlob
-import numpy as np
 import pandas as pd
-import config
+import os
 
-def authenticate():
-	#"""Authenticate and return API access"""
-    auth = tweepy.OAuthHandler(config.consumer_key, config.consumer_secret)
-    auth.set_access_token(config.access_token, config.access_token_secret)
+def getTweetsUser(user):
+    os.system("snscrape --jsonl --max-results 10 twitter-user " + user + " > user-tweets.json")
+    tweets_df = pd.read_json('user-tweets.json', lines=True)
+    os.system("rm -rf user-tweets.json")
 
-    api = tweepy.API(auth)
-    return api
+    return tweets_df
 
-def searchTweets(string):
-	#"""Search for tweets"""
-    public_tweets = authenticate().search(string)
-    return public_tweets
 
-def analyzeTweet(tweet):
-	#"""Analyze tweets with Textblob"""
-    analysis = TextBlob(tweet.text)  
-    return analysis.sentiment
-
-def createDataFrame(searchValue):
-	#"""Create Dataframe"""
-    api = authenticate()
-    public_tweets = api.search(searchValue)
-    df = pd.DataFrame()
-    for tweet in public_tweets:
-        text = tweet.text
-        analysis = analyzeTweet(tweet)
-        time = tweet.created_at
-        df = df.append({'Tweet': text,'Sentiment': analysis, 'Timestamp': time}, ignore_index=True)
-    return df
