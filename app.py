@@ -1,22 +1,21 @@
 from flask import Flask, request, render_template
-from utils import createDataFrame
 from flask_restful import Api
 
 import os
-from utils import getTweetsUser
+from utils import get_tweets_user
 
 app = Flask(__name__)
 api = Api(app)
 api.prefix = '/api'
 
+
 # Endpoints______________________________________________________________________
-from endpoints.helloworld.resource import HelloWorldResource
 from endpoints.predict.resource import PredictResource
 
 api.add_resource(PredictResource, '/predict', '/predict/<user>')
 
 
-# Routes_________________________________________________________________________
+# Routes
 
 @app.route('/')
 def index():
@@ -26,9 +25,10 @@ def index():
 @app.route('/', methods=['POST'])
 def results():
 	#"""Show dataframe and results"""
+    app.logger.info('Button pressed')
     text = request.form['text']
     processed_text = text.lower()
-    df=getTweetsUser(processed_text)
+    df=get_tweets_user(processed_text)
     return render_template('results.html',tables=[df.to_html(classes='data')], titles=df.columns.values)
 
 
