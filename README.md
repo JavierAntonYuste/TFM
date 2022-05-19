@@ -36,4 +36,4 @@ Test the [live demo on Heroku](https://twitter-sentiment-demo.herokuapp.com).
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
->>>>>>> a2fff1c (First commit)
+
