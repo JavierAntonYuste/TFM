@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# TFM
-=======
 # Twitter-API-Flask
 
 Do you want on-demand sentiment analysis for a given keyword? This project serves you [Twitter API](https://developer.twitter.com/en/apply-for-access) access on a [Flask](https://github.com/pallets/flask) framework. Simply enter keyword and you receive the latest tweets and their sentiment via [Textblob](https://github.com/sloria/TextBlob).
