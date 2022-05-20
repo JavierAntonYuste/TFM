@@ -18,37 +18,28 @@ log = logging.getLogger()
 def get_tweets_user(user):
 
     # Data scrapping
-    print('Data scrapping')
-    os.system("snscrape --jsonl --max-results 10 twitter-user " + user + " > user-tweets.json")
+    os.system("snscrape --jsonl --max-results 100 twitter-user " + user + " > user-tweets.json")
 
     # Data loading and processing
-    print('Processing data...')
-
     data = pd.read_json('user-tweets.json', lines=True)
 
-    print('Processing data 1...')
     data.drop(['_type', 'url', 'date', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
-    print('Processing data 2 ...')
     data_grouped=data.groupby(data.user.apply(pd.Series).username).content.apply(list).transform(lambda x : ' '.join(x)).reset_index()
-
-    print('PreProcessing data...')
-
     data_grouped['content'] = data_grouped.apply(lambda row: preprocess(row['content']), axis=1)
 
+    # Data selection and vectorization
     x=data_grouped['content']
-    print(x)
-
-    print('Vectorizing...')
-
-    vectorizer = TfidfVectorizer(analyzer='word', stop_words='english')
-    x = vectorizer.fit_transform(x.apply(lambda x: ' '.join(x)))
+    vectorizer = pickle.load(open('model/TfidfVectorizer.pickle', "rb"))
+    x = vectorizer.transform(x.apply(lambda x: ' '.join(x)))
 
     #Predictor
     loaded_model = pickle.load(open('model/RandomForest.sav', 'rb'))
     y_pred = loaded_model.predict(x)
+    print(y_pred)
 
+    # Delete used file
     os.system("rm -rf user-tweets.json")
-
+    
     return data
 
 
