@@ -9,5 +9,7 @@ requests-oauthlib==1.2.0
 textblob==0.15.3
 tweepy==3.7.0
 yarg==0.1.9
-flask_restful
-sklearn
+joblib==1.1.0
+flask_restful==0.3.9
+scikit-learn==1.0
+snscrape==0.4.3.20220106
