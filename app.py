@@ -25,7 +25,6 @@ def index():
 @app.route('/', methods=['POST'])
 def results():
 	#"""Show dataframe and results"""
-    app.logger.info('Button pressed')
     text = request.form['text']
     processed_text = text.lower()
     df=get_tweets_user(processed_text)

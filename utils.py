@@ -18,7 +18,7 @@ log = logging.getLogger()
 def get_tweets_user(user):
 
     # Data scrapping
-    os.system("snscrape --jsonl --max-results 100 twitter-user " + user + " > user-tweets.json")
+    os.system("snscrape --jsonl --max-results 1000 twitter-user " + user + " > user-tweets.json")
 
     # Data loading and processing
     data = pd.read_json('user-tweets.json', lines=True)
@@ -39,7 +39,7 @@ def get_tweets_user(user):
 
     # Delete used file
     os.system("rm -rf user-tweets.json")
-    
+
     return data
 
 
