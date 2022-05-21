@@ -48,6 +48,12 @@ def scrap_tweets(user):
 def get_tweets_user(user):
 
     x = scrap_tweets(user)
+
+    ##### FOR TESTING #####
+    data = pd.read_json('user-tweets.json', lines=True)
+    data.drop(['_type', 'url', 'date', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
+    #######################
+    
     vectorizer = pickle.load(open('model/TfidfVectorizer.pickle', "rb"))
     x = vectorizer.transform(x.apply(lambda x: ' '.join(x)))
 
@@ -76,6 +82,11 @@ def preprocess(words, type='doc'):
 def get_tweets_user_ml(user):
 
     x = scrap_tweets(user)
+
+    ##### FOR TESTING #####
+    data = pd.read_json('user-tweets.json', lines=True)
+    data.drop(['_type', 'url', 'date', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
+    #######################  
 
     model = pickle.load(open('model/mBERT.sav', 'rb'))
 
