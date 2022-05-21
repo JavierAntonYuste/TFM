@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 from flask_restful import Api
 
 import os
-from server.utils import get_tweets_user
+from utils import get_tweets_user
 
 app = Flask(__name__)
 api = Api(app)
@@ -11,8 +11,12 @@ api.prefix = '/api'
 
 # Endpoints______________________________________________________________________
 from endpoints.predict.resource import PredictResource
+from endpoints.mlpredict.resource import PredictResourceML
+
 
 api.add_resource(PredictResource, '/predict', '/predict/<user>')
+api.add_resource(PredictResourceML, '/predictml', '/predictml/<user>')
+
 
 
 # Routes

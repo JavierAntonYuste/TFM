@@ -13,10 +13,22 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import string
 
+
+import contractions
+import torch
+import numpy as np
+from transformers import BertTokenizer
+from torch import nn
+from transformers import BertModel
+from torch.optim import Adam
+from tqdm import tqdm
+from sklearn.metrics import precision_recall_fscore_support as score
+
+
 log = logging.getLogger()
 
-def get_tweets_user(user):
 
+def scrap_tweets(user):
     # Data scrapping
     os.system("snscrape --jsonl --max-results 1000 twitter-user " + user + " > user-tweets.json")
 
@@ -29,6 +41,13 @@ def get_tweets_user(user):
 
     # Data selection and vectorization
     x=data_grouped['content']
+
+    return x
+
+
+def get_tweets_user(user):
+
+    x = scrap_tweets(user)
     vectorizer = pickle.load(open('model/TfidfVectorizer.pickle', "rb"))
     x = vectorizer.transform(x.apply(lambda x: ' '.join(x)))
 
@@ -53,3 +72,53 @@ def preprocess(words, type='doc'):
     punctuation = set(string.punctuation)
     words = [w for w in lemmas_clean if  w not in punctuation]
     return words
+
+def get_tweets_user_ml(user):
+
+    x = scrap_tweets(user)
+
+    model = pickle.load(open('model/mBERT.sav', 'rb'))
+
+    test = Dataset(test_data)
+
+    test_dataloader = torch.utils.data.DataLoader(test, batch_size=4)
+
+    use_cuda = torch.cuda.is_available()
+    device = torch.device("cuda" if use_cuda else "cpu")
+
+    if use_cuda:
+
+        model = model.cuda()
+
+    total_acc_test = 0
+    y_test = []
+    y_pred = []
+    with torch.no_grad():
+
+        for test_input, test_label in test_dataloader:
+
+              test_label = test_label.to(device)
+              mask = test_input['attention_mask'].to(device)
+              input_id = test_input['input_ids'].squeeze(1).to(device)
+
+              output = model(input_id, mask)
+
+              acc = (output.argmax(dim=1) == test_label).sum().item()
+              y_test.extend(test_label.tolist())
+              y_pred.extend(output.argmax(dim=1).tolist())
+              total_acc_test += acc
+    
+    print(f'Test Accuracy: {total_acc_test / len(test_data): .3f}')
+    precision,recall,fscore,support=score(y_test,y_pred,average='weighted')
+    print(f'Precision: {precision}')
+    print(f'Recall: {recall}')
+    print(f'fscore: {fscore}')
+
+    #Predictor
+    
+    print(y_pred)
+
+    # Delete used file
+    os.system("rm -rf user-tweets.json")
+
+    return data
