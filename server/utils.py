@@ -88,9 +88,15 @@ def get_tweets_user_ml(user):
     data.drop(['_type', 'url', 'date', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
     #######################  
 
-    model = pickle.load(open('model/mBERT.sav', 'rb'))
+    #model = pickle.load(open('model/mBERT.sav', 'rb'))
 
-    test = Dataset(test_data)
+    # with open('model/mBERT.sav', 'rb') as f:
+    #     model = pickle.load(f)
+
+    model = BertClassifier()
+
+
+    test = Dataset(data)
 
     test_dataloader = torch.utils.data.DataLoader(test, batch_size=4)
 
