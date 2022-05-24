@@ -37,9 +37,9 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'TFM',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: Color.fromARGB(255, 55, 138, 35),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         onGenerateRoute: appRouter.onGenerateRoute,

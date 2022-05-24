@@ -11,8 +11,8 @@ class AppRouter {
       case '/':
         return MaterialPageRoute(
           builder: (_) => HomeScreen(
-            title: "Home Screen",
-            color: Colors.blueAccent,
+            title: "Trabajo Fin de Master",
+            color: Color.fromARGB(255, 89, 155, 15),
           ),
         );
       case '/second':
