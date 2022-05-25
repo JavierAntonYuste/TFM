@@ -1,11 +1,14 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/l10n/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_app/logic/cubit/counter_cubit.dart';
 import 'package:flutter_app/presentation/router/app_router.dart';
 
 import 'logic/cubit/internet_cubit.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp(
@@ -39,10 +42,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'TFM',
         theme: ThemeData(
-          primaryColor: Color.fromARGB(255, 55, 138, 35),
+          primaryColor: Color.fromARGB(255, 23, 55, 115),
+          secondaryHeaderColor: Color.fromARGB(255, 255, 199, 238),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         onGenerateRoute: appRouter.onGenerateRoute,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
       ),
     );
   }

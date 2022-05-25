@@ -28,23 +28,23 @@ class _ThirdScreenState extends State<ThirdScreen> {
               'You have pushed the button this many times:',
             ),
             BlocConsumer<CounterCubit, CounterState>(
-              listener: (context, state) {
-                if (state.wasIncremented == true) {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Incremented!'),
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  );
-                } else if (state.wasIncremented == false) {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Decremented!'),
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  );
-                }
-              },
+              // listener: (context, state) {
+              //   if (state.wasIncremented == true) {
+              //     Scaffold.of(context).showSnackBar(
+              //       SnackBar(
+              //         content: Text('Incremented!'),
+              //         duration: Duration(milliseconds: 300),
+              //       ),
+              //     );
+              //   } else if (state.wasIncremented == false) {
+              //     Scaffold.of(context).showSnackBar(
+              //       SnackBar(
+              //         content: Text('Decremented!'),
+              //         duration: Duration(milliseconds: 300),
+              //       ),
+              //     );
+              //   }
+              // },
               builder: (context, state) {
                 if (state.counterValue < 0) {
                   return Text(

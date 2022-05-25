@@ -5,6 +5,8 @@ import 'package:flutter_app/presentation/screens/home_screen.dart';
 import 'package:flutter_app/presentation/screens/second_screen.dart';
 import 'package:flutter_app/presentation/screens/third_screen.dart';
 
+import 'package:flutter_app/l10n/l10n.dart';
+
 class AppRouter {
   Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -12,7 +14,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => HomeScreen(
             title: "Trabajo Fin de Master",
-            color: Color.fromARGB(255, 89, 155, 15),
+            color: Color.fromARGB(255, 23, 55, 115),
           ),
         );
       case '/second':
