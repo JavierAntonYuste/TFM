@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/constants/strings.dart' as s;
+import 'package:flutter_app/presentation/screens/prediction_screen.dart';
+import 'package:flutter_app/presentation/screens/second_screen.dart';
+import 'package:flutter_app/presentation/screens/third_screen.dart';
 
 class hometitle extends StatelessWidget {
   const hometitle(BuildContext context, {Key key}) : super(key: key);
@@ -113,13 +116,15 @@ class _homeformState extends State<homeform> {
               ],
             ),
             MaterialButton(
-              color: Colors.greenAccent,
+              color: Theme.of(context).primaryColor,
               child: Text(
                 'Go to Third Screen',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed('/third');
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ThirdScreen(),
+                ));
               },
             ),
           ],
