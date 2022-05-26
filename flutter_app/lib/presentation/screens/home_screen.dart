@@ -23,7 +23,12 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: widget.color,
             title: Padding(
               padding: EdgeInsets.only(left: 20),
-              child: Text(widget.title),
+              child: Text(
+                widget.title,
+                style: TextStyle(
+                    color: Theme.of(context).secondaryHeaderColor,
+                    fontFamily: 'Libre Baskerville'),
+              ),
             )),
         body: CustomScrollView(
           slivers: <Widget>[
@@ -31,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 delegate: SliverChildListDelegate([
               Container(
                 color: Color(0xF9C3E3FD),
-                height: (MediaQuery.of(context).size.height) - 75,
+                //height: (MediaQuery.of(context).size.height) - 75,
                 child: hometitle(context),
               ),
               Container(
