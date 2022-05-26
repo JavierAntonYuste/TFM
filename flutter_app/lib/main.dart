@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Color.fromARGB(255, 23, 55, 115),
           secondaryHeaderColor: Color.fromARGB(255, 255, 199, 238),
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          fontFamily: 'Montserrat',
         ),
         onGenerateRoute: appRouter.onGenerateRoute,
         localizationsDelegates: const [
