@@ -13,10 +13,7 @@ class AppRouter {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
-          builder: (_) => HomeScreen(
-            title: "Trabajo Fin de Master",
-            color: Color.fromARGB(255, 23, 55, 115),
-          ),
+          builder: (_) => HomeScreen(),
         );
       case '/prediction':
         return MaterialPageRoute(

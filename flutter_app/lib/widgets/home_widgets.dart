@@ -12,28 +12,50 @@ class hometitle extends StatelessWidget {
     return Container(
         child: Column(
       children: <Widget>[
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+              padding: const EdgeInsets.all(25),
+              child: Text(
+                s.homeTitle,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 40,
+                  fontFamily: 'LibreBaskerville',
+                ),
+              )),
+        ),
         Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 8),
-            child: Text(
-              s.homeTitle,
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
-                fontFamily: 'LibreBaskerville',
-              ),
-            )),
-        Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 25),
             child: Text(
               s.homeDescription,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.justify,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 20,
               ),
             )),
+        SizedBox(
+          height: 50,
+        ),
         homeform(context),
+        SizedBox(
+          height: 30,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Center(
+            child: Text(
+              s.homeDisclaimer,
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+        ),
       ],
     ));
   }
@@ -115,6 +137,9 @@ class _homeformState extends State<homeform> {
                     )),
               ],
             ),
+            SizedBox(
+              height: 30,
+            ),
             MaterialButton(
               color: Theme.of(context).primaryColor,
               child: Text(
@@ -123,7 +148,7 @@ class _homeformState extends State<homeform> {
               ),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ThirdScreen(),
+                  builder: (context) => PredictionScreen(),
                 ));
               },
             ),
