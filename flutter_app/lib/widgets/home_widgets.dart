@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/constants/strings.dart' as s;
+import 'package:flutter_app/models/HomeArguments.dart';
 import 'package:flutter_app/presentation/screens/prediction_screen.dart';
 import 'package:flutter_app/presentation/screens/second_screen.dart';
 import 'package:flutter_app/presentation/screens/third_screen.dart';
@@ -73,6 +74,7 @@ class _homeformState extends State<homeform> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController usernameController = TextEditingController();
     int dropDownValue = 1000;
     return Form(
       key: _formKey,
@@ -95,6 +97,7 @@ class _homeformState extends State<homeform> {
                   width: 300,
                   padding: const EdgeInsets.all(8),
                   child: TextFormField(
+                    controller: usernameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       isDense: true,
@@ -121,7 +124,7 @@ class _homeformState extends State<homeform> {
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
-                      items: <int>[1000, 1500, 200]
+                      items: <int>[1000, 1500, 2000]
                           .map<DropdownMenuItem<int>>((int value) {
                         return DropdownMenuItem<int>(
                           value: value,
@@ -143,13 +146,13 @@ class _homeformState extends State<homeform> {
             MaterialButton(
               color: Theme.of(context).primaryColor,
               child: Text(
-                'Go to Third Screen',
+                'Predict',
                 style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
               ),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PredictionScreen(),
-                ));
+                Navigator.pushNamed(context, '/prediction',
+                    arguments: HomeArguments(
+                        usernameController.text.toString(), dropDownValue));
               },
             ),
           ],

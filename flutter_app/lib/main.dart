@@ -1,14 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/l10n/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_app/logic/cubit/counter_cubit.dart';
 import 'package:flutter_app/presentation/router/app_router.dart';
 
 import 'logic/cubit/internet_cubit.dart';
-
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp(
@@ -48,11 +45,6 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Montserrat',
         ),
         onGenerateRoute: appRouter.onGenerateRoute,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
       ),
     );
   }
