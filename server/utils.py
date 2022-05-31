@@ -65,7 +65,7 @@ def get_tweets_user(user):
     # Delete used file
     os.system("rm -rf user-tweets.json")
 
-    return data
+    return {'prediction': str(y_pred[0])}
 
 
 
