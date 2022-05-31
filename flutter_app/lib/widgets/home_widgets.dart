@@ -98,6 +98,14 @@ class _homeformState extends State<homeform> {
                   padding: const EdgeInsets.all(8),
                   child: TextFormField(
                     controller: usernameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your user name.';
+                      } else if (value.contains('@')) {
+                        return 'Please don\'t use the @ char.';
+                      }
+                      return null;
+                    },
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       isDense: true,
