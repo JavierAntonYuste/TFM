@@ -5,21 +5,13 @@ import 'package:http/http.dart';
 
 class ApiProvider {
   final String _url = "http://192.168.128.24:5000/predict/";
-  Future<List<ApiModel>> fetchPrediction(username) async {
-    Response res = await get(Uri.parse(_url + username));
+  Future<ApiModel> fetchPrediction(username) async {
+    Response response = await get(Uri.parse(_url + username));
 
-    if (res.statusCode == 200) {
-      //final body = "[" + jsonDecode(res.body) + "]";
-      final body = jsonDecode(res.body);
-      //print(body);
+    if (response.statusCode == 200) {
+      ApiModel prediction = ApiModel.fromJson(json.decode(response.body));
 
-      List<ApiModel> posts = body
-          .map(
-            (dynamic item) => ApiModel.fromJson(item),
-          )
-          .toList();
-      print(posts);
-      return body;
+      return prediction;
     } else {
       throw "Unable to retrieve posts.";
     }
