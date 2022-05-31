@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/home_widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_app/constants/enums.dart';
-import 'package:flutter_app/logic/cubit/counter_cubit.dart';
-import 'package:flutter_app/logic/cubit/internet_cubit.dart';
 
 import 'package:flutter_app/constants/strings.dart' as s;
 

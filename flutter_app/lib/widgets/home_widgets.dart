@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/constants/strings.dart' as s;
 import 'package:flutter_app/models/HomeArguments.dart';
-import 'package:flutter_app/presentation/screens/prediction_screen.dart';
-import 'package:flutter_app/presentation/screens/second_screen.dart';
-import 'package:flutter_app/presentation/screens/third_screen.dart';
 
 class hometitle extends StatelessWidget {
   const hometitle(BuildContext context, {Key key}) : super(key: key);
@@ -75,7 +72,8 @@ class _homeformState extends State<homeform> {
   @override
   Widget build(BuildContext context) {
     TextEditingController usernameController = TextEditingController();
-    int dropDownValue = 1000;
+    int dropDownValue;
+
     return Form(
       key: _formKey,
       child: Container(
@@ -132,17 +130,14 @@ class _homeformState extends State<homeform> {
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
-                      items: <int>[1000, 1500, 2000]
-                          .map<DropdownMenuItem<int>>((int value) {
+                      items: <int>[1000, 1500, 2000].map((value) {
                         return DropdownMenuItem<int>(
                           value: value,
                           child: Text(value.toString()),
                         );
                       }).toList(),
-                      onChanged: (int newValue) {
-                        setState(() {
-                          dropDownValue = newValue;
-                        });
+                      onChanged: (value) {
+                        setState(() => dropDownValue = value);
                       },
                       elevation: 16,
                     )),
@@ -158,6 +153,7 @@ class _homeformState extends State<homeform> {
                 style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
               ),
               onPressed: () {
+                print(dropDownValue);
                 Navigator.pushNamed(context, '/prediction',
                     arguments: HomeArguments(
                         usernameController.text.toString(), dropDownValue));

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_app/blocs/api_bloc.dart';
 import 'package:flutter_app/models/apiModel.dart';
 
 import 'package:flutter_app/logic/cubit/api_provider.dart';
 import 'package:flutter_app/presentation/screens/prediction_screen.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 FutureBuilder<ApiModel> buildBody(
     BuildContext context, PredictionScreen widget) {
