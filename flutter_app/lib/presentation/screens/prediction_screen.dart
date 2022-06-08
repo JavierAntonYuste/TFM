@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_app/constants/strings.dart' as s;
@@ -30,7 +33,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                     fontFamily: 'Libre Baskerville'),
               ),
             )),
-        body: Text(widget.n_tweets.toString()));
+        body: buildBody(context, widget));
+    //Text(widget.n_tweets.toString()));
     //buildBody(context, widget));
   }
 }

@@ -72,7 +72,7 @@ class _homeformState extends State<homeform> {
   @override
   Widget build(BuildContext context) {
     TextEditingController usernameController = TextEditingController();
-    int dropDownValue;
+    int dropDownValue = 1000;
 
     return Form(
       key: _formKey,

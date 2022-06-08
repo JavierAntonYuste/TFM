@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/logic/cubit/img_converter.dart';
 import 'package:flutter_app/models/apiModel.dart';
 
 import 'package:flutter_app/logic/cubit/api_provider.dart';
@@ -29,16 +30,28 @@ ListView _buildPosts(BuildContext context, ApiModel prediction) {
     itemCount: 1,
     padding: EdgeInsets.all(8),
     itemBuilder: (context, index) {
-      return Card(
-        elevation: 4,
-        child: ListTile(
-          title: Text(
-            prediction.prediction.toString(),
-            style: TextStyle(fontWeight: FontWeight.bold),
+      return Column(children: [
+        Card(
+          elevation: 4,
+          child: ListTile(
+            title: Text(
+              prediction.prediction.toString(),
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(prediction.toString()),
           ),
-          subtitle: Text(prediction.toString()),
         ),
-      );
+        Container(
+          width: double.infinity,
+          child: Image.network(
+            prediction.pic.toString(),
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+            width: double.infinity,
+            child: convertIMG(prediction.wordcloud.toString())),
+      ]);
     },
   );
 }

@@ -7,18 +7,26 @@ String ApiModelToJson(List<ApiModel> data) =>
 
 class ApiModel {
   String prediction;
+  String username;
+  String pic;
+  String wordcloud;
   String error;
 
-  ApiModel({this.prediction});
+  ApiModel({this.prediction, this.username, this.pic, this.wordcloud});
 
   ApiModel.withError(String errorMessage) {
     error = errorMessage;
   }
 
   factory ApiModel.fromJson(Map<String, dynamic> json) => ApiModel(
-        prediction: json["prediction"],
-      );
+      prediction: json["prediction"],
+      username: json["username"],
+      pic: json["pic"],
+      wordcloud: json["wordcloud"]);
   Map<String, dynamic> toJson() => {
         "prediction": prediction,
+        "username": username,
+        "pic": pic,
+        "wordcloud": wordcloud
       };
 }
