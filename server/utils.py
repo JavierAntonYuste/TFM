@@ -13,6 +13,9 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import string
 
+from wordcloud import WordCloud
+
+import base64
 
 import contractions
 import torch
@@ -42,30 +45,32 @@ def scrap_tweets(user):
     # Data selection and vectorization
     x=data_grouped['content']
 
-    return x
+    return x,data
 
 
 def get_tweets_user(user):
 
-    x = scrap_tweets(user)
-
-    ##### FOR TESTING #####
-    data = pd.read_json('user-tweets.json', lines=True)
-    data.drop(['_type', 'url', 'date', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
-    #######################
+    x,data = scrap_tweets(user)
+    wordcloud=get_wordcloud(data)
     
     vectorizer = pickle.load(open('model/TfidfVectorizer.pickle', "rb"))
-    x = vectorizer.transform(x.apply(lambda x: ' '.join(x)))
+    x_vec = vectorizer.transform(x.apply(lambda x: ' '.join(x)))
 
     #Predictor
     loaded_model = pickle.load(open('model/RandomForest.sav', 'rb'))
-    y_pred = loaded_model.predict(x)
+    y_pred = loaded_model.predict(x_vec)
     print(y_pred)
 
     # Delete used file
     os.system("rm -rf user-tweets.json")
 
-    return {'prediction': str(y_pred[0])}
+    # Data preparation for JSON
+    prediction=str(y_pred[0])
+    username=data['user'][0].get('username')
+    pic=data['user'][0].get('profileImageUrl')
+    pic_orig=pic.replace('_normal','')    
+
+    return {'prediction': prediction, 'username': username, 'pic':pic_orig, 'wordcloud':wordcloud}
 
 
 
@@ -78,6 +83,58 @@ def preprocess(words, type='doc'):
     punctuation = set(string.punctuation)
     words = [w for w in lemmas_clean if  w not in punctuation]
     return words
+
+def test(user):
+
+    x,data = scrap_tweets(user)
+    
+    vectorizer = pickle.load(open('model/TfidfVectorizer.pickle', "rb"))
+    x = vectorizer.transform(x.apply(lambda x: ' '.join(x)))
+
+    #Predictor
+    loaded_model = pickle.load(open('model/RandomForest.sav', 'rb'))
+    y_pred = loaded_model.predict(x)
+    print(y_pred)
+
+    # Delete used file
+    os.system("rm -rf user-tweets.json")
+
+    # Data preparation for JSON
+    prediction=str(y_pred[0])
+    username=data['user'][0].get('username')
+    pic=data['user'][0].get('profileImageUrl')
+    pic_orig=pic.replace('_normal','') 
+
+
+    return {'prediction': prediction, 'username': username, 'pic':pic_orig }
+
+def get_wordcloud(data):
+    stopwords = nltk.corpus.stopwords.words('english')
+    newStopWords = ['t','co','http']
+    stopwords.extend(newStopWords)
+
+    # Start with one review:
+    data_grouped=data.groupby(data.user.apply(pd.Series).username).content.apply(list).transform(lambda x : ' '.join(x)).reset_index()
+
+    text = data_grouped['content'][0]
+
+    # Create and generate a word cloud image:
+    wordcloud = WordCloud(stopwords=stopwords).generate(text).to_file('wordcloud.png')
+
+    with open("wordcloud.png", "rb") as image:
+        f = image.read()
+        im_b64 = base64.b64encode(f).decode("utf8")
+
+    os.system("rm -rf wordcloud.png")
+
+
+    return im_b64
+
+
+
+
+
+
 
 def get_tweets_user_ml(user):
 
@@ -139,3 +196,5 @@ def get_tweets_user_ml(user):
     os.system("rm -rf user-tweets.json")
 
     return data
+
+    
