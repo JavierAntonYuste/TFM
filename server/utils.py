@@ -16,6 +16,7 @@ import string
 from wordcloud import WordCloud
 
 import base64
+import re
 
 import contractions
 import torch
@@ -109,17 +110,17 @@ def test(user):
     return {'prediction': prediction, 'username': username, 'pic':pic_orig }
 
 def get_wordcloud(data):
-    stopwords = nltk.corpus.stopwords.words('english')
-    newStopWords = ['t','co','http']
-    stopwords.extend(newStopWords)
+    stopwords = nltk.corpus.stopwords.words('spanish','english')
 
     # Start with one review:
     data_grouped=data.groupby(data.user.apply(pd.Series).username).content.apply(list).transform(lambda x : ' '.join(x)).reset_index()
 
     text = data_grouped['content'][0]
+    text_clean = re.sub(r"(?:\@|https?\://)\S+", "", text)
+
 
     # Create and generate a word cloud image:
-    wordcloud = WordCloud(stopwords=stopwords).generate(text).to_file('wordcloud.png')
+    wordcloud = WordCloud(stopwords=stopwords, background_color='#c3e3fdf9' ).generate(text_clean).to_file('wordcloud.png')
 
     with open("wordcloud.png", "rb") as image:
         f = image.read()
