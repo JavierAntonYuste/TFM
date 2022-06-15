@@ -7,5 +7,9 @@ convertIMG(value) {
   Uint8List _bytesImage;
   _bytesImage = Base64Decoder().convert(value);
 
-  return Image.memory(_bytesImage);
+  return Image.memory(
+    _bytesImage,
+    width: 500,
+    height: 250,
+  );
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -33,7 +34,19 @@ class _PredictionScreenState extends State<PredictionScreen> {
                     fontFamily: 'Libre Baskerville'),
               ),
             )),
-        body: buildBody(context, widget));
+        body: CustomScrollView(
+          slivers: [
+            SliverList(
+                delegate: SliverChildListDelegate([
+              Container(
+                color: Color(0xF9C3E3FD),
+                child: buildBody(context, widget),
+                //buildBodyTest(context, prediction: 'Hola'),
+              ),
+            ]))
+          ],
+        ));
+
     //Text(widget.n_tweets.toString()));
     //buildBody(context, widget));
   }
