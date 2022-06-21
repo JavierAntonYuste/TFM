@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'TFM',
+        title: 'PredEating',
         theme: ThemeData(
           primaryColor: Color.fromARGB(255, 23, 55, 115),
           secondaryHeaderColor: Color.fromARGB(255, 255, 199, 238),

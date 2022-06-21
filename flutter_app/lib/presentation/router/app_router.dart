@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/CompareArguments.dart';
 import 'package:flutter_app/models/HomeArguments.dart';
+import 'package:flutter_app/presentation/screens/compare_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_app/logic/cubit/counter_cubit.dart';
 
@@ -23,13 +25,16 @@ class AppRouter {
             n_tweets: args.n_tweets,
           ),
         );
-      case '/third':
+      case '/compare':
+        final args = settings.arguments as CompareArguments;
         return MaterialPageRoute(
-          builder: (_) => ThirdScreen(
-            title: "Thirst Screen",
-            color: Colors.greenAccent,
+          builder: (_) => CompareScreen(
+            title: "Compare",
+            username: args.otherUsername,
+            previousPrediction: args.prediction,
           ),
         );
+
       default:
         return null;
     }

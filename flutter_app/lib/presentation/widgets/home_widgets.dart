@@ -35,7 +35,7 @@ class hometitle extends StatelessWidget {
               ),
             )),
         SizedBox(
-          height: 50,
+          height: 25,
         ),
         homeform(context),
         SizedBox(
@@ -48,6 +48,7 @@ class hometitle extends StatelessWidget {
               s.homeDisclaimer,
               textAlign: TextAlign.justify,
               style: TextStyle(
+                fontStyle: FontStyle.italic,
                 fontSize: 15,
                 color: Theme.of(context).primaryColor,
               ),
@@ -68,11 +69,11 @@ class homeform extends StatefulWidget {
 
 class _homeformState extends State<homeform> {
   final _formKey = GlobalKey<FormState>();
+  int dropDownValue = 1000;
 
   @override
   Widget build(BuildContext context) {
     TextEditingController usernameController = TextEditingController();
-    int dropDownValue = 1000;
 
     return Form(
       key: _formKey,
@@ -80,7 +81,6 @@ class _homeformState extends State<homeform> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            Text('Introduce your username'),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -117,7 +117,12 @@ class _homeformState extends State<homeform> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Text('Nº of tweets to analyse'),
+                Text(
+                  'Nº of tweets to analyse',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
                 Container(
                     width: 100,
                     padding: const EdgeInsets.all(8),
@@ -130,7 +135,7 @@ class _homeformState extends State<homeform> {
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
-                      items: <int>[1000, 1500, 2000].map((value) {
+                      items: <int>[1000, 2500, 5000].map((value) {
                         return DropdownMenuItem<int>(
                           value: value,
                           child: Text(value.toString()),
@@ -143,14 +148,28 @@ class _homeformState extends State<homeform> {
                     )),
               ],
             ),
+            Text(
+              '(The highest number, the more accurate the prediction is)',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
             SizedBox(
-              height: 30,
+              height: 35,
             ),
             MaterialButton(
               color: Theme.of(context).primaryColor,
-              child: Text(
-                'Predict',
-                style: TextStyle(color: Theme.of(context).secondaryHeaderColor),
+              hoverColor: Colors.pink,
+              hoverElevation: 15,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7)),
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  'Perform the analysis',
+                  style:
+                      TextStyle(color: Theme.of(context).secondaryHeaderColor),
+                ),
               ),
               onPressed: () {
                 print(dropDownValue);
@@ -189,18 +208,46 @@ class wantmore extends StatelessWidget {
               ),
             )),
         Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-              child: Text(
-                s.WantMoreDescription,
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                  color: Theme.of(context).secondaryHeaderColor,
-                  fontSize: 20,
+            alignment: Alignment.topLeft,
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                  child: Text(
+                    s.wantMoreDescription,
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
-              )),
-        ),
+                // SizedBox(
+                //   height: 25,
+                // ),
+                // Row(
+                //   children: [
+                //     Image.asset('assets/images/logo-upm.png'),
+                //   ],
+                // ),
+                SizedBox(
+                  height: 25,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                  child: Text(
+                    s.wantMoreDescription2,
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            )),
       ],
     ));
   }

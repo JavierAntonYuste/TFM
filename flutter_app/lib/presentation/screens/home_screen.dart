@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/home_widgets.dart';
+import 'package:flutter_app/presentation/widgets/home_widgets.dart';
 
 import 'package:flutter_app/constants/strings.dart' as s;
 
@@ -44,7 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
             //height: (MediaQuery.of(context).size.height),
             child: wantmore(context),
           )
-        ]))
+        ])),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Container(
+            color: Theme.of(context).primaryColor,
+          ),
+        )
       ],
     ));
   }
@@ -75,7 +81,8 @@ class _MyAppSpace extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   child: Image.network(
-                    'https://images.pexels.com/photos/1250452/pexels-photo-1250452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940&blur=25',
+                    'https://images.pexels.com/photos/4672717/pexels-photo-4672717.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=853&w=1280&blur=25',
+                    //'https://images.pexels.com/photos/1250452/pexels-photo-1250452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940&blur=25',
                     fit: BoxFit.cover,
                   ),
                 ),

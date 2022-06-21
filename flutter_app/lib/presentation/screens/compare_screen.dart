@@ -5,21 +5,23 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_app/constants/strings.dart' as s;
+import 'package:flutter_app/models/apiModel.dart';
 
 import 'package:flutter_app/presentation/widgets/predict_widgets.dart';
 
-class PredictionScreen extends StatefulWidget {
-  const PredictionScreen({Key key, this.title, this.username, this.n_tweets})
+class CompareScreen extends StatefulWidget {
+  const CompareScreen(
+      {Key key, this.title, this.username, this.previousPrediction})
       : super(key: key);
   final String title;
   final String username;
-  final int n_tweets;
+  final ApiModel previousPrediction;
 
   @override
-  State<PredictionScreen> createState() => _PredictionScreenState();
+  State<CompareScreen> createState() => _CompareScreenState();
 }
 
-class _PredictionScreenState extends State<PredictionScreen> {
+class _CompareScreenState extends State<CompareScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,14 +42,10 @@ class _PredictionScreenState extends State<PredictionScreen> {
                 delegate: SliverChildListDelegate([
               Container(
                 color: Color(0xF9C3E3FD),
-                child: buildBody(context, widget),
-                //buildBodyTest(context, prediction: 'Hola'),
+                child: Text(widget.username),
               ),
             ]))
           ],
         ));
-
-    //Text(widget.n_tweets.toString()));
-    //buildBody(context, widget));
   }
 }

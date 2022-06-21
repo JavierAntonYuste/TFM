@@ -9,7 +9,7 @@ convertIMG(value) {
 
   return Image.memory(
     _bytesImage,
-    width: 500,
-    height: 250,
+    width: 800,
+    height: 400,
   );
 }
