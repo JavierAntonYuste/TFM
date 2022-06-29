@@ -1,35 +1,41 @@
 # Libraries
 import pandas as pd
-import os, pickle
-import sklearn, logging
+import os, pickle, sklearn, logging, string, base64, re, collections, nltk
+import numpy as np
+import matplotlib.pyplot as plt
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import string
 
 from wordcloud import WordCloud
 
-import base64
-import re
+nltk.download('stopwords')
+nltk.download('punkt')
 
-import contractions
-import torch
-import numpy as np
-from transformers import BertTokenizer
-from torch import nn
-from transformers import BertModel
-from torch.optim import Adam
-from tqdm import tqdm
-from sklearn.metrics import precision_recall_fscore_support as score
 
 
 log = logging.getLogger()
+
+def get_prediction(user):
+    x,data = scrap_tweets(user)
+    wordcloud=get_wordcloud(data)
+    prediction=str(make_prediction(x))
+    graph=get_graph(data)
+    mean_words=get_mean(data)
+    mentioned_users=get_most_mentioned_users(data)
+    
+    # Data preparation for JSON
+    username=data['user'][0].get('username')
+    pic=data['user'][0].get('profileImageUrl').replace('_normal','') 
+
+    # Delete used file
+    os.system("rm -rf user-tweets.json") 
+
+    return {'prediction': prediction, 'username': username, 'mean_words':mean_words, 'mentioned_users':mentioned_users,'pic':pic, 'wordcloud':wordcloud, \
+        'graph': graph}
 
 
 def scrap_tweets(user):
@@ -39,7 +45,7 @@ def scrap_tweets(user):
     # Data loading and processing
     data = pd.read_json('user-tweets.json', lines=True)
 
-    data.drop(['_type', 'url', 'date', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
+    data.drop(['_type', 'url', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
     data_grouped=data.groupby(data.user.apply(pd.Series).username).content.apply(list).transform(lambda x : ' '.join(x)).reset_index()
     data_grouped['content'] = data_grouped.apply(lambda row: preprocess(row['content']), axis=1)
 
@@ -48,31 +54,14 @@ def scrap_tweets(user):
 
     return x,data
 
-
-def get_tweets_user(user):
-
-    x,data = scrap_tweets(user)
-    wordcloud=get_wordcloud(data)
-    
+def make_prediction(x):
     vectorizer = pickle.load(open('model/TfidfVectorizer.pickle', "rb"))
     x_vec = vectorizer.transform(x.apply(lambda x: ' '.join(x)))
 
     #Predictor
     loaded_model = pickle.load(open('model/RandomForest.sav', 'rb'))
     y_pred = loaded_model.predict(x_vec)
-    print(y_pred)
-
-    # Delete used file
-    os.system("rm -rf user-tweets.json")
-
-    # Data preparation for JSON
-    prediction=str(y_pred[0])
-    username=data['user'][0].get('username')
-    pic=data['user'][0].get('profileImageUrl')
-    pic_orig=pic.replace('_normal','')    
-
-    return {'prediction': prediction, 'username': username, 'pic':pic_orig, 'wordcloud':wordcloud}
-
+    return y_pred[0]
 
 
 def preprocess(words, type='doc'):
@@ -86,7 +75,6 @@ def preprocess(words, type='doc'):
     return words
 
 def test(user):
-
     x,data = scrap_tweets(user)
     
     vectorizer = pickle.load(open('model/TfidfVectorizer.pickle', "rb"))
@@ -110,92 +98,50 @@ def test(user):
     return {'prediction': prediction, 'username': username, 'pic':pic_orig }
 
 def get_wordcloud(data):
-    stopwords = nltk.corpus.stopwords.words('spanish','english')
-
     # Start with one review:
     data_grouped=data.groupby(data.user.apply(pd.Series).username).content.apply(list).transform(lambda x : ' '.join(x)).reset_index()
 
     text = data_grouped['content'][0]
     text_clean = re.sub(r"(?:\@|https?\://)\S+", "", text)
 
-
+    stopwords = nltk.corpus.stopwords.words('english')
     # Create and generate a word cloud image:
-    wordcloud = WordCloud(stopwords=stopwords, background_color='#c3e3fdf9' ).generate(text_clean).to_file('wordcloud.png')
+    wordcloud = WordCloud(stopwords=stopwords, background_color='#c3e3fdf9', width=1600, height=800).generate(text_clean).to_file('wordcloud.png')
 
     with open("wordcloud.png", "rb") as image:
         f = image.read()
         im_b64 = base64.b64encode(f).decode("utf8")
 
-    os.system("rm -rf wordcloud.png")
-
+    os.system("rm -f wordcloud.png")
 
     return im_b64
 
+def get_graph(data):
+    tweet_df_24h= data.groupby(pd.Grouper(key='date', freq='24H', convention='start')).size()
+    tweet_df_24h.plot(figsize=(18,6), color='#e91e63')
 
+    plt.ylabel('24 Hours Tweet Count')
+    plt.xlabel('Date')
+    plt.title('Tweet Frequency')
+    plt.grid(True)
+    plt.savefig('graph.png', transparent=True)
 
+    with open("graph.png", "rb") as image:
+        f = image.read()
+        im_b64 = base64.b64encode(f).decode("utf8")
 
+    os.system("rm -f graph.png")
 
+    return im_b64
 
+def get_mean(data):
+    data["n_words"] = data["content"].apply(lambda x: len(x))
+    return data['n_words'].mean()
 
-def get_tweets_user_ml(user):
+def get_most_mentioned_users(data):
+    result=data.apply(lambda row: re.findall("@([a-zA-Z0-9]{1,15})",row['content']), axis=1)
+    result_filtered = [x for x in result if x]
+    result_flat = [x for xs in result_filtered for x in xs]
 
-    x = scrap_tweets(user)
-
-    ##### FOR TESTING #####
-    data = pd.read_json('user-tweets.json', lines=True)
-    data.drop(['_type', 'url', 'date', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
-    #######################  
-
-    #model = pickle.load(open('model/mBERT.sav', 'rb'))
-
-    # with open('model/mBERT.sav', 'rb') as f:
-    #     model = pickle.load(f)
-
-    model = BertClassifier()
-
-
-    test = Dataset(data)
-
-    test_dataloader = torch.utils.data.DataLoader(test, batch_size=4)
-
-    use_cuda = torch.cuda.is_available()
-    device = torch.device("cuda" if use_cuda else "cpu")
-
-    if use_cuda:
-
-        model = model.cuda()
-
-    total_acc_test = 0
-    y_test = []
-    y_pred = []
-    with torch.no_grad():
-
-        for test_input, test_label in test_dataloader:
-
-              test_label = test_label.to(device)
-              mask = test_input['attention_mask'].to(device)
-              input_id = test_input['input_ids'].squeeze(1).to(device)
-
-              output = model(input_id, mask)
-
-              acc = (output.argmax(dim=1) == test_label).sum().item()
-              y_test.extend(test_label.tolist())
-              y_pred.extend(output.argmax(dim=1).tolist())
-              total_acc_test += acc
-    
-    print(f'Test Accuracy: {total_acc_test / len(test_data): .3f}')
-    precision,recall,fscore,support=score(y_test,y_pred,average='weighted')
-    print(f'Precision: {precision}')
-    print(f'Recall: {recall}')
-    print(f'fscore: {fscore}')
-
-    #Predictor
-    
-    print(y_pred)
-
-    # Delete used file
-    os.system("rm -rf user-tweets.json")
-
-    return data
-
-    
+    counter=collections.Counter(result_flat)
+    return counter.most_common(5)

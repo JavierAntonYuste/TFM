@@ -4,7 +4,7 @@ from requests import Response
 from flask_restful import Api
 
 import os
-from utils import get_tweets_user, test
+from utils import get_prediction, test
 
 app = Flask(__name__)
 api = Api(app)
@@ -40,7 +40,7 @@ def results():
 def predict(username):
     #"""Predict"""
     #resp = Response(json.dumps(get_tweets_user(username)))
-    resp = make_response(json.dumps(get_tweets_user(username)))
+    resp = make_response(json.dumps(get_prediction(username)))
     resp.headers['Access-Control-Allow-Origin'] = '*'
 
     return resp
