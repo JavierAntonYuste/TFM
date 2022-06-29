@@ -40,7 +40,9 @@ def results():
 def predict(username):
     #"""Predict"""
     #resp = Response(json.dumps(get_tweets_user(username)))
-    resp = make_response(json.dumps(get_prediction(username)))
+    json_response=json.dumps(get_prediction(username))
+    #print(json_response)
+    resp = make_response(json_response)
     resp.headers['Access-Control-Allow-Origin'] = '*'
 
     return resp
