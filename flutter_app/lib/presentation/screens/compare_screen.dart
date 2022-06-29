@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_app/constants/strings.dart' as s;
 import 'package:flutter_app/models/apiModel.dart';
-
-import 'package:flutter_app/presentation/widgets/predict_widgets.dart';
+import 'package:flutter_app/presentation/widgets/compare_widgets.dart';
 
 class CompareScreen extends StatefulWidget {
   const CompareScreen(
@@ -41,8 +40,9 @@ class _CompareScreenState extends State<CompareScreen> {
             SliverList(
                 delegate: SliverChildListDelegate([
               Container(
+                height: MediaQuery.of(context).size.height,
                 color: Color(0xF9C3E3FD),
-                child: Text(widget.username),
+                child: buildCompareBody(context),
               ),
             ]))
           ],

@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_app/logic/cubit/counter_cubit.dart';
 
 import 'package:flutter_app/presentation/screens/home_screen.dart';
-import 'package:flutter_app/presentation/screens/third_screen.dart';
 import 'package:flutter_app/presentation/screens/prediction_screen.dart';
 
 class AppRouter {

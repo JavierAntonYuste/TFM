@@ -194,7 +194,7 @@ class _comparingformState extends State<comparingform> {
               ],
             ),
             SizedBox(
-              height: 35,
+              height: 25,
             ),
             MaterialButton(
               color: Theme.of(context).primaryColor,
