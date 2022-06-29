@@ -16,7 +16,7 @@ FutureBuilder<ApiModel> buildBody(
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.done) {
         final ApiModel prediction = snapshot.data;
-        print(snapshot);
+        print(snapshot.data.meanwords);
         print(prediction.prediction.toString());
         return buildPrediction(context, prediction: prediction);
       } else {
@@ -136,7 +136,16 @@ class buildPredictionState extends State<buildPrediction> {
         ),
         Container(
           child: comparingform(prediction: widget.prediction),
-        )
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: EdgeInsets.all(15),
+          child: Container(
+              width: double.infinity,
+              child: convertIMG(widget.prediction.graph.toString())),
+        ),
       ],
     ));
   }

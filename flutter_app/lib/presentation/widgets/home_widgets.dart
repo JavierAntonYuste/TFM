@@ -172,7 +172,6 @@ class _homeformState extends State<homeform> {
                 ),
               ),
               onPressed: () {
-                print(dropDownValue);
                 Navigator.pushNamed(context, '/prediction',
                     arguments: HomeArguments(
                         usernameController.text.toString(), dropDownValue));
