@@ -24,7 +24,7 @@ def get_prediction(user):
     wordcloud=get_wordcloud(data)
     prediction=str(make_prediction(x))
     graph=get_graph(data)
-    mean_words=get_mean(data)
+    meanwords=get_mean(data)
     mentioned_users=get_most_mentioned_users(data)
     
     # Data preparation for JSON
@@ -34,8 +34,8 @@ def get_prediction(user):
     # Delete used file
     os.system("rm -rf user-tweets.json") 
 
-    return {'prediction': prediction, 'username': username, 'mean_words':mean_words, 'mentioned_users':mentioned_users,'pic':pic, 'wordcloud':wordcloud, \
-        'graph': graph}
+    return {'prediction': prediction, 'username': username, 'meanwords':meanwords, \
+        'mentioned_users':mentioned_users,'pic':pic, 'wordcloud':wordcloud, 'graph': graph}
 
 
 def scrap_tweets(user):
@@ -45,7 +45,11 @@ def scrap_tweets(user):
     # Data loading and processing
     data = pd.read_json('user-tweets.json', lines=True)
 
-    data.drop(['_type', 'url', 'renderedContent',  'id', 'replyCount', 'likeCount', 'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', 'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', 'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place', 'hashtags', 'cashtags',], axis=1, inplace=True)
+    data.drop(['_type', 'url', 'renderedContent',  'id', 'replyCount', 'likeCount', \
+        'quoteCount','conversationId', 'lang', 'source','sourceUrl', 'outlinks', 'tcooutlinks', \
+        'sourceLabel', 'retweetCount', 'media', 'retweetedTweet', 'quotedTweet', \
+        'inReplyToTweetId', 'inReplyToUser', 'mentionedUsers', 'coordinates', 'place',\
+         'hashtags', 'cashtags',], axis=1, inplace=True)
     data_grouped=data.groupby(data.user.apply(pd.Series).username).content.apply(list).transform(lambda x : ' '.join(x)).reset_index()
     data_grouped['content'] = data_grouped.apply(lambda row: preprocess(row['content']), axis=1)
 
@@ -112,11 +116,12 @@ def get_wordcloud(data):
         f = image.read()
         im_b64 = base64.b64encode(f).decode("utf8")
 
-    os.system("rm -f wordcloud.png")
+    os.system("rm -rf wordcloud.png")
 
     return im_b64
 
 def get_graph(data):
+    tweet_df_24h=pd.DataFrame()
     tweet_df_24h= data.groupby(pd.Grouper(key='date', freq='24H', convention='start')).size()
     tweet_df_24h.plot(figsize=(18,6), color='#e91e63')
 
@@ -130,7 +135,8 @@ def get_graph(data):
         f = image.read()
         im_b64 = base64.b64encode(f).decode("utf8")
 
-    os.system("rm -f graph.png")
+    del tweet_df_24h
+    os.system("rm -rf graph.png")
 
     return im_b64
 
