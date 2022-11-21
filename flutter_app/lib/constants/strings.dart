@@ -27,3 +27,9 @@ String negativeRecommendation =
     'We haven\' detected any Disorder in your account and we want to encourage you to keep healthy and taking care of yourself. \nDo you know anyone that may be suffering an Eating Disorder? \nIf yes, try to be there for them and help.';
 String wordcloudIntroduction =
     'We have analysed your profile most used words and they are represented in this diagram.';
+
+// ########################################################################
+// ######################### Compare Screen strings #######################
+// ########################################################################
+String positivePrediction = 'Positive in ED';
+String negativePrediction = 'Negative in ED';

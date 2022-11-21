@@ -1,18 +1,69 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_app/logic/cubit/api_provider.dart';
+import 'package:flutter_app/models/apiModel.dart';
+import 'package:flutter_app/presentation/screens/compare_screen.dart';
 
-class buildCompareBody extends StatefulWidget {
-  const buildCompareBody(BuildContext context, {Key key}) : super(key: key);
+import 'package:flutter_app/constants/strings.dart' as s;
 
-  @override
-  State<buildCompareBody> createState() => _buildBodyState();
+FutureBuilder<ApiModel> buildBodyCompare(
+    BuildContext context, CompareScreen widget, ApiModel previousPrediction) {
+  final ApiProvider httpService = ApiProvider();
+  return FutureBuilder<ApiModel>(
+    future: httpService.fetchPrediction(widget.username),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.done) {
+        final ApiModel prediction = snapshot.data;
+        print(snapshot.data.meanwords);
+        print(prediction.prediction.toString());
+        return buildTable(context,
+            prediction: prediction, previousPrediction: previousPrediction);
+      } else {
+        return Container(
+          height: (MediaQuery.of(context).size.height),
+          child: Padding(
+            padding: EdgeInsets.all((MediaQuery.of(context).size.width) / 8),
+            child: Center(
+              child: LinearProgressIndicator(
+                color: Colors.pink,
+                semanticsLabel: 'Loading, please wait...',
+              ),
+            ),
+          ),
+        );
+      }
+    },
+  );
 }
 
-class _buildBodyState extends State<buildCompareBody> {
+class buildTable extends StatefulWidget {
+  final ApiModel prediction;
+  final ApiModel previousPrediction;
+
+  const buildTable(BuildContext context,
+      {Key key, this.prediction, this.previousPrediction})
+      : super(key: key);
+
+  @override
+  State<buildTable> createState() => _buildTableState();
+}
+
+class _buildTableState extends State<buildTable> {
   @override
   Widget build(BuildContext context) {
+    String previousPredictionString;
+    String predictionString;
+    if (widget.previousPrediction.prediction.toString() == '1') {
+      previousPredictionString = s.positivePrediction;
+    } else {
+      previousPredictionString = s.negativePrediction;
+    }
+
+    if (widget.prediction.prediction.toString() == '1') {
+      predictionString = s.positivePrediction;
+    } else {
+      predictionString = s.negativePrediction;
+    }
+
     return Container(
       child: Column(
         children: [
@@ -30,31 +81,80 @@ class _buildBodyState extends State<buildCompareBody> {
                 TableRow(
                   children: <Widget>[
                     Container(
-                      height: 32,
-                      color: Colors.green,
+                      child: Text('Username'),
                     ),
                     Container(
-                      height: 64,
-                      color: Colors.blue,
+                      child:
+                          Text(widget.previousPrediction.username.toString()),
+                    ),
+                    Container(
+                      child: Text(widget.prediction.username.toString()),
                     ),
                   ],
                 ),
                 TableRow(
-                  decoration: const BoxDecoration(
-                    color: Colors.grey,
-                  ),
                   children: <Widget>[
                     Container(
-                      height: 64,
-                      width: 128,
-                      color: Colors.purple,
+                      child: Text('Profile picture'),
                     ),
                     Container(
-                      height: 32,
-                      color: Colors.yellow,
+                      child: Padding(
+                          padding: const EdgeInsets.all(25),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              widget.previousPrediction.pic.toString(),
+                            ),
+                            radius: 130,
+                          )),
+                    ),
+                    Container(
+                      child: Padding(
+                          padding: const EdgeInsets.all(25),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              widget.prediction.pic.toString(),
+                            ),
+                            radius: 130,
+                          )),
                     ),
                   ],
                 ),
+                TableRow(
+                  children: <Widget>[
+                    Container(
+                      child: Text('Prediction'),
+                    ),
+                    Container(
+                      child: Text(previousPredictionString),
+                    ),
+                    Container(
+                      child: Text(predictionString),
+                    ),
+                  ],
+                ),
+                TableRow(children: <Widget>[
+                  Container(
+                    child: Text('Mean words per tweet'),
+                  ),
+                  Container(
+                    child: Text(widget.previousPrediction.meanwords.toString()),
+                  ),
+                  Container(
+                    child: Text(widget.prediction.meanwords.toString()),
+                  ),
+                ]),
+                TableRow(children: <Widget>[
+                  Container(
+                    child: Text('Most mentioned users'),
+                  ),
+                  Container(
+                    child: Text(
+                        widget.previousPrediction.mentioned_users.toString()),
+                  ),
+                  Container(
+                    child: Text(widget.prediction.mentioned_users.toString()),
+                  ),
+                ]),
               ],
             ),
           )

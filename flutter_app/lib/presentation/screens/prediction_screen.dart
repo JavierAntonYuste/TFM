@@ -41,13 +41,9 @@ class _PredictionScreenState extends State<PredictionScreen> {
               Container(
                 color: Color(0xF9C3E3FD),
                 child: buildBody(context, widget),
-                //buildBodyTest(context, prediction: 'Hola'),
               ),
             ]))
           ],
         ));
-
-    //Text(widget.n_tweets.toString()));
-    //buildBody(context, widget));
   }
 }

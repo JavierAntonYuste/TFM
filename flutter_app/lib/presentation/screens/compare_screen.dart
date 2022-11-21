@@ -42,7 +42,8 @@ class _CompareScreenState extends State<CompareScreen> {
               Container(
                 height: MediaQuery.of(context).size.height,
                 color: Color(0xF9C3E3FD),
-                child: buildCompareBody(context),
+                child: buildBodyCompare(
+                    context, widget, widget.previousPrediction),
               ),
             ]))
           ],
